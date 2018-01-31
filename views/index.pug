@@ -1,5 +1,190 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+
+    - var totalBTCAmt = 0;
+    - var totalETHAmt = 0;
+    - var totalBTCValue = 0;
+    - var totalETHValue = 0;
+    - var totalValue = 0;
+    - var totalBTCGainLoss = 0;
+    - var totalETHGainLoss = 0;
+    - var totalGainLoss = 0;
+    - var totalBTCCost = 0;
+    - var totalETHCost = 0;
+    - var totalReturn = 0;
+    - var totalCost = 0;
+    - for(i = 0; i < docs.length; i++){
+        - var gainLoss;
+        - if(docs[i].currency == 'BTC'){
+            - docs[i].currentValue = Number(Math.round((Number(docs[i].amount) * Number(cBTCPrice)) + 'e2') + 'e-2');
+            - docs[i].gainLoss = Number(Math.round((docs[i].currentValue - Number(docs[i].cost)) + 'e2') + 'e-2');
+            - totalBTCValue += docs[i].currentValue;
+            - totalBTCAmt += Number(docs[i].amount);
+            - totalBTCGainLoss += docs[i].gainLoss;
+            - totalBTCCost += docs[i].cost;
+        - } else {
+            - docs[i].currentValue = Number(Math.round((Number(docs[i].amount) * Number(cETHPrice)) + 'e2') + 'e-2');
+            - docs[i].gainLoss = Number(Math.round((docs[i].currentValue - Number(docs[i].cost)) + 'e2') + 'e-2');
+            - totalETHValue += docs[i].currentValue;
+            - totalETHAmt += Number(docs[i].amount);
+            - totalETHGainLoss += docs[i].gainLoss;
+            - totalETHCost += docs[i].cost;
+        - }
+        - totalValue += docs[i].currentValue;
+        - totalCost += docs[i].cost;
+        - totalGainLoss += docs[i].gainLoss;
+    - }
+                
+    .container
+        div
+            div(style="float: right")
+                a(href="/logout") Logout
+            h2 Summary
+            table.table.table-striped
+                thead.thead-default
+                    tr
+                        th Currency
+                        th Amount
+                        th Value
+                        th Gain/Loss
+                        th Return
+                tr
+                    td BTC
+                    td #{totalBTCAmt}
+                    td $#{totalBTCValue.toFixed(2)}
+                    - if(totalBTCGainLoss < 0){
+                        td.loss $#{totalBTCGainLoss.toFixed(2)}
+                    - } else if(totalBTCGainLoss > 0){
+                        td.gain $#{totalBTCGainLoss.toFixed(2)}
+                    - } else {
+                        td $#{totalBTCGainLoss.toFixed(2)}
+                    - }
+                    - if(((totalBTCGainLoss / totalBTCCost)*100) < 0){
+                        td.loss #{((totalBTCGainLoss / totalBTCCost)*100).toFixed(2)}%
+                    - } else if(((totalBTCGainLoss / totalBTCCost)*100) > 0){
+                        td.gain #{((totalBTCGainLoss / totalBTCCost)*100).toFixed(2)}%
+                    - } else {
+                        td #{((totalBTCGainLoss / totalBTCCost)*100).toFixed(2)}%
+                    - }
+                tr
+                    td ETH
+                    td #{totalETHAmt}
+                    td $#{totalETHValue.toFixed(2)}
+                    - if(totalETHGainLoss < 0){
+                        td.loss $#{totalETHGainLoss.toFixed(2)}
+                    - } else if(totalETHGainLoss > 0){
+                        td.gain $#{totalETHGainLoss.toFixed(2)}
+                    - } else {
+                        td $#{totalETHGainLoss.toFixed(2)}
+                    - }
+                    - if(((totalETHGainLoss / totalETHCost)*100) < 0){
+                        td.loss #{((totalETHGainLoss / totalETHCost)*100).toFixed(2)}%
+                    - } else if(((totalETHGainLoss / totalETHCost)*100) > 0){
+                        td.gain #{((totalETHGainLoss / totalETHCost)*100).toFixed(2)}%
+                    - } else {
+                        td #{((totalETHGainLoss / totalETHCost)*100).toFixed(2)}%
+                    - }
+                tr
+                    td All 
+                    td &nbsp;
+                    td $#{totalValue.toFixed(2)}
+                    - if(totalGainLoss < 0){
+                        td.loss $#{totalGainLoss.toFixed(2)}
+                    - } else if(totalGainLoss > 0){
+                        td.gain $#{totalGainLoss.toFixed(2)}
+                    - } else {
+                        td $#{totalGainLoss.toFixed(2)}
+                    - }
+                    - if(((totalGainLoss / totalCost)*100) < 0){
+                        td.loss #{((totalGainLoss / totalCost)*100).toFixed(2)}%
+                    - } else if(((totalGainLoss / totalCost)*100) > 0){
+                        td.gain #{((totalGainLoss / totalCost)*100).toFixed(2)}%
+                    - } else {
+                        td #{((totalGainLoss / totalCost)*100).toFixed(2)}%
+                    - }
+
+            h2 Transactions
+            table.table.table-striped
+                thead.thead-default
+                    tr
+                        th Time
+                        th Currency
+                        th Type
+                        th Amount
+                        th Cost
+                        th Current Value
+                        th Gain/Loss
+                - for(i = 0; i < docs.length; i++){
+                    tr
+                        td #{docs[i].time}
+                        td #{docs[i].currency}
+                        td #{docs[i].type}
+                        td #{docs[i].amount}
+                        td $#{docs[i].cost.toFixed(2)}
+                        td $#{docs[i].currentValue.toFixed(2)}
+                        - if(docs[i].gainLoss < 0){
+                            td.loss $#{docs[i].gainLoss.toFixed(2)}
+                        - } else if(docs[i].gainLoss > 0){
+                            td.gain $#{docs[i].gainLoss.toFixed(2)}
+                        - } else {
+                            td $#{docs[i].gainLoss.toFixed(2)}
+                        - }
+                - }
+                
+        div(id="dialog" title="New Transaction")
+            div(id="formError" style="display: none;")
+                
+            form(action="" method="post")
+                label Time and Date:
+                input(id="time" name="time" type="text").textInput
+                label Currency:
+                select(id="currency" name="currency").form-control
+                    option(selected="selected") BTC
+                    option ETH
+                label Type:
+                select(id="type" name="type").form-control
+                    option(selected) buy
+                    option sell
+                label Amount:
+                input(id="amount" name="amount" type="text").textInput
+                label(id="costProceeds") Cost:
+                input(id="cost" name="cost" type="text").textInput
+                input(id="submit" type="submit" value="Add")
+        input(id="button" type="button" value="New Transaction")
+
+    script.
+        $(document).ready(function() {
+            $(function() {
+                $('#dialog').dialog({
+                    autoOpen: false
+                });
+                $('#type').change(function(){
+                    var value = $('#type').val();
+                    if(value == 'buy'){
+                        $('#costProceeds').html('Cost:').change();
+                    } else if(value == 'sell'){  
+                        $('#costProceeds').html('Proceeds:').change();
+                    }
+                });
+                $('#button').on('click', function() {
+                    $('#dialog').dialog('open');
+                });
+            });
+            $('#submit').click(function(e) {
+                var time = $('#time').val();
+                var amount = $('#amount').val();
+                var cost = $('#cost').val();
+                var timeReg = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-1][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+                if (!time || !amount || !cost) {
+                    e.preventDefault();
+                    $('#formError').html('<span>All fields are required.</span>');
+                    $('#formError').show('fast');
+                }
+                if (!(time).match(timeReg)) {
+                    e.preventDefault();
+                    $('#formError').html('<span>Time must be in YYYY-MM-DD HH-MM-SS format.</span>');
+                    $('#formError').show('fast');
+                }
+            });
+        });

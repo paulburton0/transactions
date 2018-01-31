@@ -9,6 +9,9 @@ var index = require('./routes/index');
 
 var app = express();
 
+var login = require('./routes/login');
+var logout = require('./routes/logout');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -21,9 +24,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/logout', logout);
+app.all('/login', login);
 app.use('/', index);
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
-app.use('/jquery-ui', express.static(__dirname + '/node_modules/jquery-ui-dist/'));
+app.use('/jquery-ui-dist', express.static(__dirname + '/node_modules/jquery-ui-dist/'));
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/'));
 
 // catch 404 and forward to error handler

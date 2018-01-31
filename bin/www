@@ -5,21 +5,27 @@
  */
 
 var app = require('../app');
+var fs = require('fs');
 var debug = require('debug')('transactions:server');
-var http = require('http');
+var http = require('https');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3002');
+var port = normalizePort(process.env.PORT || '3005');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
+var options = {
+  key: fs.readFileSync(__dirname + '/../ssl/privkey.pem'),
+  cert: fs.readFileSync(__dirname + '/../ssl/cert.pem'),
+  ca: fs.readFileSync(__dirname + '/../ssl/fullchain.pem')
+}
 
-var server = http.createServer(app);
+var server = http.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
