@@ -40,6 +40,24 @@ router.get('/', function(req, res, next) {
                 }
             });
         },
+        gdaxLTCPrice: function(callback){
+            gdax.LTCPrice('bid', function(err, gLTCPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gLTCPrice);
+                }
+            });
+        },
+        gdaxBCHPrice: function(callback){
+            gdax.BCHPrice('bid', function(err, gBCHPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gBCHPrice);
+                }
+            });
+        },
         coinbaseBTCPrice: function(callback){
             coinbase.BTCPrice('bid', function(err, gBTCPrice){
                 if(err){
@@ -57,18 +75,36 @@ router.get('/', function(req, res, next) {
                     callback(null, gETHPrice)
                 }
             });
+        },
+        coinbaseLTCPrice: function(callback){
+            coinbase.LTCPrice('bid', function(err, gLTCPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gLTCPrice)
+                }
+            });
+        },
+        coinbaseBCHPrice: function(callback){
+            coinbase.BCHPrice('bid', function(err, gBCHPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gBCHPrice)
+                }
+            });
         }
     }, function(err, results){
         if(err){
             console.error(err);
         }
-        res.render('index', { docs: results.transactions, gBTCPrice: results.gdaxBTCPrice, gETHPrice: results.gdaxETHPrice, cBTCPrice: results.coinbaseBTCPrice, cETHPrice: results.coinbaseETHPrice, title: 'Transactions' });
+        res.render('index', { docs: results.transactions, gBTCPrice: results.gdaxBTCPrice, gETHPrice: results.gdaxETHPrice, gLTCPrice: results.gdaxLTCPrice, gBCHPrice: results.gdaxBCHPrice, cBTCPrice: results.coinbaseBTCPrice, cETHPrice: results.coinbaseETHPrice, cLTCPrice: results.coinbaseLTCPrice, cBCHPrice: results.coinbaseBCHPrice, title: 'Transactions' });
     });
 });
 
 router.post('/', function(req, res, next) {
     var time = req.body.time;
-    var currency = req.body.currency;
+    var currency = req.body.currency.toUpper();
     var type = req.body.type;
     var amount = Number(req.body.amount);
     var cost = Number(req.body.cost);
