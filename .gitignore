@@ -1,3 +1,4 @@
 ssl/*
 auth.js
 logs/
+node_modules/
