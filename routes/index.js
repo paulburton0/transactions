@@ -104,7 +104,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     var time = req.body.time;
-    var currency = req.body.currency.toUpper();
+    var currency = req.body.currency.toUpperCase();
     var type = req.body.type;
     var amount = Number(req.body.amount);
     var cost = Number(req.body.cost);
