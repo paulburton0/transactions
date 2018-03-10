@@ -166,6 +166,12 @@ block content
                     - }
 
             h2 Transactions
+            select(id="currencyDisplay" name="currencyDisplay").form-control
+                option(selected="selected") All
+                option BTC
+                option ETH
+                option LTC
+                option BCH
             table.table.table-striped
                 thead.thead-default
                     tr
@@ -177,7 +183,7 @@ block content
                         th Current Value
                         th Gain/Loss
                 - for(i = 0; i < docs.length; i++){
-                    tr
+                    tr(class=docs[i].currency + "_row")
                         td #{docs[i].time}
                         td #{docs[i].currency}
                         td #{docs[i].type}
@@ -248,6 +254,23 @@ block content
                 });
                 $('#button').on('click', function(){
                     $('#dialog').dialog('open');
+                });
+                $('#currencyDisplay').on('change', function(){
+                   var rowClass = $('#currencyDisplay').val() + '_row';
+                   var rowClasses = ['BTC_row', 'ETH_row', 'LTC_row', 'BCH_row'];
+                   if(rowClass == 'All_row'){
+                       $('.BTC_row').show();
+                       $('.LTC_row').show();
+                       $('.BCH_row').show();
+                       $('.ETH_row').show();
+                   }else{
+                       $('.'+rowClass).show();
+                       for(i=0; i<rowClasses.length; i++){
+                            if(rowClass != rowClasses[i]){
+                                $('.'+rowClasses[i]).hide();
+                            }
+                        }
+                   }
                 });
             });
             $('#submit').click(function(e){
