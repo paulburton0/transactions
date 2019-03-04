@@ -4,20 +4,24 @@ block content
     - var totalETHAmt = 0
     - var totalLTCAmt = 0
     - var totalBCHAmt = 0
+    - var totalETCAmt = 0
     - var totalBTCValue = 0
     - var totalETHValue = 0
     - var totalLTCValue = 0
     - var totalBCHValue = 0
+    - var totalETCValue = 0
     - var totalValue = 0
     - var totalBTCGainLoss = 0
     - var totalETHGainLoss = 0
     - var totalLTCGainLoss = 0
     - var totalBCHGainLoss = 0
+    - var totalETCGainLoss = 0
     - var totalGainLoss = 0
     - var totalBTCCost = 0
     - var totalETHCost = 0
     - var totalLTCCost = 0
     - var totalBCHCost = 0
+    - var totalETCCost = 0
     - var totalReturn = 0
     - var totalCost = 0
     - for(i = 0; i < docs.length; i++){
@@ -50,7 +54,15 @@ block content
             - totalBCHAmt += Number(docs[i].amount);
             - totalBCHGainLoss += docs[i].gainLoss;
             - totalBCHCost += docs[i].cost;
+        - }else if(docs[i].currency == 'ETC'){
+            - docs[i].currentValue = Number(Math.round((Number(docs[i].amount) * Number(cETCPrice)) + 'e2') + 'e-2');
+            - docs[i].gainLoss = Number(Math.round((docs[i].currentValue - Number(docs[i].cost)) + 'e2') + 'e-2');
+            - totalETCValue += docs[i].currentValue;
+            - totalETCAmt += Number(docs[i].amount);
+            - totalETCGainLoss += docs[i].gainLoss;
+            - totalETCCost += docs[i].cost;
         - }
+
         - totalValue += docs[i].currentValue;
         - totalCost += docs[i].cost;
         - totalGainLoss += docs[i].gainLoss;
@@ -146,6 +158,25 @@ block content
                         td #{((totalBCHGainLoss / totalBCHCost)*100).toFixed(2)}%
                     - }
                 tr
+                    td ETC
+                    td #{totalETCAmt.toFixed(8)}
+                    td $#{totalETCValue.toFixed(2)}
+                    - if(totalETCGainLoss < 0){
+                        td.loss $#{totalETCGainLoss.toFixed(2)}
+                    - }else if(totalETCGainLoss > 0){
+                        td.gain $#{totalETCGainLoss.toFixed(2)}
+                    - }else{
+                        td $#{totalETCGainLoss.toFixed(2)}
+                    - }
+                    - if(((totalETCGainLoss / totalETCCost)*100) < 0){
+                        td.loss #{((totalETCGainLoss / totalETCCost)*100).toFixed(2)}%
+                    - }else if(((totalETCGainLoss / totalETCCost)*100) > 0){
+                        td.gain #{((totalETCGainLoss / totalETCCost)*100).toFixed(2)}%
+                    - }else{
+                        - totalETCCost = totalETCCost == 0 ? 1 : totalETCCost;
+                        td #{((totalETCGainLoss / totalETCCost)*100).toFixed(2)}%
+                    - }
+                tr
                     td All 
                     td &nbsp;
                     td $#{totalValue.toFixed(2)}
@@ -172,6 +203,7 @@ block content
                 option ETH
                 option LTC
                 option BCH
+                option ETC 
             table.table.table-striped
                 thead.thead-default
                     tr
@@ -211,6 +243,7 @@ block content
                     option ETH
                     option LTC
                     option BCH
+                    option ETC
                 label Type:
                 select(id="type" name="type").form-control
                     option(selected="selected") buy
@@ -257,12 +290,13 @@ block content
                 });
                 $('#currencyDisplay').on('change', function(){
                    var rowClass = $('#currencyDisplay').val() + '_row';
-                   var rowClasses = ['BTC_row', 'ETH_row', 'LTC_row', 'BCH_row'];
+                   var rowClasses = ['BTC_row', 'ETH_row', 'LTC_row', 'BCH_row', 'ETC_row'];
                    if(rowClass == 'All_row'){
                        $('.BTC_row').show();
                        $('.LTC_row').show();
-                       $('.BCH_row').show();
                        $('.ETH_row').show();
+                       $('.BCH_row').show();
+                       $('.ETC_row').show();
                    }else{
                        $('.'+rowClass).show();
                        for(i=0; i<rowClasses.length; i++){

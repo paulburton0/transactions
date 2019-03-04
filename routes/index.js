@@ -58,6 +58,15 @@ router.get('/', function(req, res, next) {
                 }
             });
         },
+        gdaxETCPrice: function(callback){
+            gdax.ETCPrice('bid', function(err, gETCPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gETCPrice);
+                }
+            });
+        },
         coinbaseBTCPrice: function(callback){
             coinbase.BTCPrice('bid', function(err, gBTCPrice){
                 if(err){
@@ -93,12 +102,21 @@ router.get('/', function(req, res, next) {
                     callback(null, gBCHPrice)
                 }
             });
+        },
+        coinbaseETCPrice: function(callback){
+            coinbase.ETCPrice('bid', function(err, gETCPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gETCPrice)
+                }
+            });
         }
     }, function(err, results){
         if(err){
             console.error(err);
         }
-        res.render('index', { docs: results.transactions, gBTCPrice: results.gdaxBTCPrice, gETHPrice: results.gdaxETHPrice, gLTCPrice: results.gdaxLTCPrice, gBCHPrice: results.gdaxBCHPrice, cBTCPrice: results.coinbaseBTCPrice, cETHPrice: results.coinbaseETHPrice, cLTCPrice: results.coinbaseLTCPrice, cBCHPrice: results.coinbaseBCHPrice, title: 'Transactions' });
+        res.render('index', { docs: results.transactions, gBTCPrice: results.gdaxBTCPrice, gETHPrice: results.gdaxETHPrice, gLTCPrice: results.gdaxLTCPrice, gBCHPrice: results.gdaxBCHPrice, gETCPrice: results.gdaxETCPrice, cBTCPrice: results.coinbaseBTCPrice, cETHPrice: results.coinbaseETHPrice, cLTCPrice: results.coinbaseLTCPrice, cBCHPrice: results.coinbaseBCHPrice, cETCPrice: results.coinbaseETCPrice, title: 'Transactions' });
     });
 });
 
