@@ -10,7 +10,7 @@ var cookieName = __dirname.split('/').slice(-2,-1).toString();
 router.get('/', function(req, res, next) {
     if(!req.cookies[cookieName]){
         req.pathname = '/login';
-        return res.redirect('/login');
+        return res.redirect('login');
     }
     async.parallel({
         transactions: function(callback){
@@ -187,7 +187,7 @@ router.post('/', function(req, res, next) {
     }
 
     db.addTransaction(time, currency, type, amount, cost, function(){
-        res.redirect('/');
+        res.redirect('/transactions');
     });
 });
 
