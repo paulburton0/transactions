@@ -10,7 +10,7 @@ var cookieName = __dirname.split('/').slice(-2,-1).toString();
 router.get('/', function(req, res, next) {
     if(!req.cookies[cookieName]){
         req.pathname = '/login';
-        return res.redirect('/login');
+        return res.redirect('login');
     }
     async.parallel({
         transactions: function(callback){
@@ -67,6 +67,33 @@ router.get('/', function(req, res, next) {
                 }
             });
         },
+        gdaxXLMPrice: function(callback){
+            gdax.XLMPrice('bid', function(err, gXLMPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gXLMPrice);
+                }
+            });
+        },
+        gdaxLINKPrice: function(callback){
+            gdax.LINKPrice('bid', function(err, gLINKPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gLINKPrice);
+                }
+            });
+        },
+        gdaxXTZPrice: function(callback){
+            gdax.XTZPrice('bid', function(err, gXTZPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gXTZPrice);
+                }
+            });
+        },
         coinbaseBTCPrice: function(callback){
             coinbase.BTCPrice('bid', function(err, gBTCPrice){
                 if(err){
@@ -111,12 +138,39 @@ router.get('/', function(req, res, next) {
                     callback(null, gETCPrice)
                 }
             });
+        },
+        coinbaseXLMPrice: function(callback){
+            coinbase.XLMPrice('bid', function(err, gXLMPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gXLMPrice)
+                }
+            });
+        },
+        coinbaseLINKPrice: function(callback){
+            coinbase.LINKPrice('bid', function(err, gLINKPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gLINKPrice)
+                }
+            });
+        },
+        coinbaseXTZPrice: function(callback){
+            coinbase.XTZPrice('bid', function(err, gXTZPrice){
+                if(err){
+                    callback(err);    
+                }else{
+                    callback(null, gXTZPrice)
+                }
+            });
         }
     }, function(err, results){
         if(err){
             console.error(err);
         }
-        res.render('index', { docs: results.transactions, gBTCPrice: results.gdaxBTCPrice, gETHPrice: results.gdaxETHPrice, gLTCPrice: results.gdaxLTCPrice, gBCHPrice: results.gdaxBCHPrice, gETCPrice: results.gdaxETCPrice, cBTCPrice: results.coinbaseBTCPrice, cETHPrice: results.coinbaseETHPrice, cLTCPrice: results.coinbaseLTCPrice, cBCHPrice: results.coinbaseBCHPrice, cETCPrice: results.coinbaseETCPrice, title: 'Transactions' });
+        res.render('index', { docs: results.transactions, gBTCPrice: results.gdaxBTCPrice, gETHPrice: results.gdaxETHPrice, gLTCPrice: results.gdaxLTCPrice, gBCHPrice: results.gdaxBCHPrice, gETCPrice: results.gdaxETCPrice, gXLMPrice: results.gdaxXLMPrice, gLINKPrice: results.gdaxLINKPrice, gXTZPrice: results.gdaxXTZPrice, cBTCPrice: results.coinbaseBTCPrice, cETHPrice: results.coinbaseETHPrice, cLTCPrice: results.coinbaseLTCPrice, cBCHPrice: results.coinbaseBCHPrice, cETCPrice: results.coinbaseETCPrice, cXLMPrice: results.coinbaseXLMPrice, cLINKPrice: results.coinbaseLINKPrice, cXTZPrice: results.coinbaseXTZPrice, title: 'Transactions' });
     });
 });
 
@@ -133,7 +187,7 @@ router.post('/', function(req, res, next) {
     }
 
     db.addTransaction(time, currency, type, amount, cost, function(){
-        res.redirect('/');
+        res.redirect('/transactions');
     });
 });
 
