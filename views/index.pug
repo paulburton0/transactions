@@ -342,6 +342,7 @@ block content
                         th Gain/Loss
                 - for(i = 0; i < docs.length; i++){
                     tr(class=docs[i].currency + "_row")
+                        td #{docs[i]._id}
                         td #{docs[i].time}
                         td #{docs[i].currency}
                         td #{docs[i].type}
@@ -356,14 +357,14 @@ block content
                             td $#{docs[i].gainLoss.toFixed(2)}
                         - }
                         td 
-                            span.editRow.glyphicon.glyphicon-pencil
-                            span.removeRow.glyphicon.glyphicon-remove
+                            span.editRow.glyphicon.glyphicon-pencil(id=docs[i]._id)
+                            span.removeRow.glyphicon.glyphicon-remove(id=docs[i]._id)
                 - }
                 
         div(id="newTxDialog" title="New Transaction")
             div(id="formError" style="display: none;")
                 
-            form(action="" method="post")
+            form(action="/add" method="post")
                 label Time and Date:
                 input(id="time" name="time" type="text").textInput
                 label Currency:
@@ -384,8 +385,35 @@ block content
                 input(id="amount" name="amount" type="text").textInput
                 label(id="costProceeds") Cost:
                 input(id="cost" name="cost" type="text").textInput
-                input(id="submit" type="submit" value="Add")
+                input(id="submit" class="submit" type="submit" value="Add")
         
+        div(id="editTxDialog" title="Edit Transaction")
+            div(id="formError" style="display: none;")
+                
+            form(action="/edit" method="post")
+                input(id="idEdit").textInput
+                label Time and Date:
+                input(id="timeEdit" name="time" type="text").textInput
+                label Currency:
+                select(id="currencyEdit" name="currency").form-control
+                    option(selected="selected") BTC
+                    option ETH
+                    option LTC
+                    option BCH
+                    option ETC
+                    option XLM
+                    option LINK
+                    option XTZ
+                label Type:
+                select(id="typeEdit" name="type").form-control
+                    option(selected="selected") buy
+                    option sell
+                label Amount:
+                input(id="amountEdit" name="amount" type="text").textInput
+                label(id="costProceedsEdit") Cost:
+                input(id="costEdit" name="cost" type="text").textInput
+                input(id="submitEdit" class="submit" type="submit" value="Save")
+
         input(class="newTxButton" type="button" value="New Transaction")
 
     script.
@@ -394,6 +422,29 @@ block content
                 $('#newTxDialog').dialog({
                     autoOpen: false
                 });
+
+                $('#editTxDialog').dialog({
+                    autoOpen: false
+                });
+
+                $('.editRow').on('click', function(){
+                    var id = $(this).id;
+                    var record = !{JSON.stringify(docs.find(element => element[_id] == id))}; 
+                    console.log(record._id);
+                    $('#idEdit').val(record._id);
+                    $('#timeEdit').val(record.time);
+                    $('#currencyEdit').val(record.currency);
+                    $('#typeEdit').val(record.type);
+                    $('#amountEdit').val(record.amount);
+                    $('#costEdit').val(record.cost);
+                    $('#editTxDialog').dialog('open');
+                });
+
+                $('.removeRow').on('click', function(){
+                    console.log(this.id);
+                    return;
+                });
+
                 $('#time').keyup(function(){
                     var timeVal = $('#time').val(); 
                         if(timeVal.match(/^[0-9]{4}$/)){
@@ -410,6 +461,7 @@ block content
                             $('#time').val(timeVal);
                         }
                 });
+
                 $('#type').change(function(){
                     var value = $('#type').val();
                     if(value == 'buy'){
@@ -418,9 +470,11 @@ block content
                         $('#costProceeds').html('Proceeds:').change();
                     }
                 });
+
                 $('.newTxButton').on('click', function(){
                     $('#newTxDialog').dialog('open');
                 });
+
                 $('#currencyDisplay').on('change', function(){
                    var rowClass = $('#currencyDisplay').val() + '_row';
                    var rowClasses = ['BTC_row', 'ETH_row', 'LTC_row', 'BCH_row', 'ETC_row', 'XLM_row', 'LINK_row', 'XTZ_row'];
@@ -443,7 +497,8 @@ block content
                    }
                 });
             });
-            $('#submit').click(function(e){
+
+            $('.submit').click(function(e){
                 var time = $('#time').val();
                 var amount = $('#amount').val();
                 var cost = $('#cost').val();

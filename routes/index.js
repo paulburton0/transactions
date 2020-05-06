@@ -174,7 +174,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.post('/', function(req, res, next) {
+router.post('/add', function(req, res, next) {
     var time = req.body.time;
     var currency = req.body.currency.toUpperCase();
     var type = req.body.type;
@@ -187,9 +187,32 @@ router.post('/', function(req, res, next) {
     }
 
     db.addTransaction(time, currency, type, amount, cost, function(){
-        res.redirect('/transactions');
-        //res.redirect('/');
+        //res.redirect('/transactions');
+        res.redirect('/');
     });
 });
 
+router.post('/edit', function(req, res, next) {
+    var id = req.body.id;
+    var time = req.body.time;
+    var currency = req.body.currency.toUpperCase();
+    var type = req.body.type;
+    var amount = Number(req.body.amount);
+    var cost = Number(req.body.cost);
+
+    if(type == 'sell' && amount > 0 && cost > 0){
+        amount *= -1;    
+        cost *= -1;    
+    }
+
+    if(type == 'buy' && amount < 0 && cost < 0){
+        amount *= -1;    
+        cost *= -1;    
+    }
+
+    db.updateTransaction(id, time, currency, type, amount, cost, function(){
+        //res.redirect('/transactions');
+        res.redirect('/');
+    });
+});
 module.exports = router;
