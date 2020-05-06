@@ -114,6 +114,7 @@ block content
                         th Value
                         th Gain/Loss
                         th Return
+                - if(totalBTCAmt > 0){
                 tr
                     td BTC
                     td #{totalBTCAmt.toFixed(8)}
@@ -133,6 +134,8 @@ block content
                         - totalBTCCost = totalBTCCost == 0 ? 1 : totalBTCCost;
                         td #{((totalBTCGainLoss / totalBTCCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalETHAmt > 0){
                 tr
                     td ETH
                     td #{totalETHAmt.toFixed(8)}
@@ -152,6 +155,8 @@ block content
                         - totalETHCost = totalETHCost == 0 ? 1 : totalETHCost;
                         td #{((totalETHGainLoss / totalETHCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalLTCAmt > 0){
                 tr
                     td LTC
                     td #{totalLTCAmt.toFixed(8)}
@@ -171,6 +176,8 @@ block content
                         - totalLTCCost = totalLTCCost == 0 ? 1 : totalLTCCost;
                         td #{((totalLTCGainLoss / totalLTCCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalBCHAmt > 0){
                 tr
                     td BCH
                     td #{totalBCHAmt.toFixed(8)}
@@ -190,6 +197,8 @@ block content
                         - totalBCHCost = totalBCHCost == 0 ? 1 : totalBCHCost;
                         td #{((totalBCHGainLoss / totalBCHCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalETCAmt > 0){
                 tr
                     td ETC
                     td #{totalETCAmt.toFixed(8)}
@@ -209,6 +218,8 @@ block content
                         - totalETCCost = totalETCCost == 0 ? 1 : totalETCCost;
                         td #{((totalETCGainLoss / totalETCCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalXLMAmt > 0){
                 tr
                     td XLM
                     td #{totalXLMAmt.toFixed(8)}
@@ -228,6 +239,8 @@ block content
                         - totalXLMCost = totalXLMCost == 0 ? 1 : totalXLMCost;
                         td #{((totalXLMGainLoss / totalXLMCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalLINKAmt > 0){
                 tr
                     td LINK
                     td #{totalLINKAmt.toFixed(8)}
@@ -247,6 +260,8 @@ block content
                         - totalLINKCost = totalLINKCost == 0 ? 1 : totalLINKCost;
                         td #{((totalLINKGainLoss / totalLINKCost)*100).toFixed(2)}%
                     - }
+                - }
+                - if(totalXTZAmt > 0){
                 tr
                     td XTZ
                     td #{totalXTZAmt.toFixed(8)}
@@ -266,6 +281,7 @@ block content
                         - totalXTZCost = totalXTZCost == 0 ? 1 : totalXTZCost;
                         td #{((totalXTZGainLoss / totalXTZCost)*100).toFixed(2)}%
                     - }
+                - }
                 tr
                     td All 
                     td &nbsp;
