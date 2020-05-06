@@ -303,17 +303,33 @@ block content
                     - }
 
             h2 Transactions
-            input(id="button" type="button" value="New Transaction")
+            input(class="newTxButton" type="button" value="New Transaction")
             select(id="currencyDisplay" name="currencyDisplay").form-control
                 option(selected="selected") All
+                - if(totalBTCAmt > 0){
                 option BTC
+                - }
+                - if(totalETHAmt > 0){
                 option ETH
+                - }
+                - if(totalLTCAmt > 0){
                 option LTC
+                - }
+                - if(totalBCHAmt > 0){
                 option BCH
+                - }
+                - if(totalETCAmt > 0){
                 option ETC 
+                - }
+                - if(totalXLMAmt > 0){
                 option XLM
+                - }
+                - if(totalLINKAmt > 0){
                 option LINK
+                - }
+                - if(totalXTZAmt > 0){
                 option XTZ
+                - }
             table.table.table-striped
                 thead.thead-default
                     tr
@@ -339,9 +355,12 @@ block content
                         - }else{
                             td $#{docs[i].gainLoss.toFixed(2)}
                         - }
+                        td 
+                            span.editRow.glyphicon.glyphicon-pencil
+                            span.removeRow.glyphicon.glyphicon-remove
                 - }
                 
-        div(id="dialog" title="New Transaction")
+        div(id="newTxDialog" title="New Transaction")
             div(id="formError" style="display: none;")
                 
             form(action="" method="post")
@@ -367,12 +386,12 @@ block content
                 input(id="cost" name="cost" type="text").textInput
                 input(id="submit" type="submit" value="Add")
         
-        input(id="button" type="button" value="New Transaction")
+        input(class="newTxButton" type="button" value="New Transaction")
 
     script.
         $(document).ready(function(){
             $(function(){
-                $('#dialog').dialog({
+                $('#newTxDialog').dialog({
                     autoOpen: false
                 });
                 $('#time').keyup(function(){
@@ -399,8 +418,8 @@ block content
                         $('#costProceeds').html('Proceeds:').change();
                     }
                 });
-                $('#button').on('click', function(){
-                    $('#dialog').dialog('open');
+                $('.newTxButton').on('click', function(){
+                    $('#newTxDialog').dialog('open');
                 });
                 $('#currencyDisplay').on('change', function(){
                    var rowClass = $('#currencyDisplay').val() + '_row';

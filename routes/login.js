@@ -18,6 +18,7 @@ router.post('/login' , function(req, res) {
     if(auth[username] && pwdHash == auth[username].password){
         res.cookie(cookieName, username, { maxAge: 604800000, httpOnly: false }); 
         res.redirect('/transactions');
+        //res.redirect('/');
     }
     else{
         alertMessage = 'Username or Password were incorrect. Please try again.';

@@ -188,6 +188,7 @@ router.post('/', function(req, res, next) {
 
     db.addTransaction(time, currency, type, amount, cost, function(){
         res.redirect('/transactions');
+        //res.redirect('/');
     });
 });
 
