@@ -342,12 +342,12 @@ block content
                         th Gain/Loss
                 - for(i = 0; i < docs.length; i++){
                     tr(class=docs[i].currency + "_row")
-                        td #{docs[i]._id}
-                        td #{docs[i].time}
-                        td #{docs[i].currency}
-                        td #{docs[i].type}
-                        td #{docs[i].amount}
-                        td $#{docs[i].cost.toFixed(2)}
+                        td.hidden.rowEditId #{docs[i]._id}
+                        td.rowEditTime #{docs[i].time}
+                        td.rowEditCurrency #{docs[i].currency}
+                        td.rowEditType #{docs[i].type}
+                        td.rowEditAmount #{docs[i].amount}
+                        td.rowEditCost $#{docs[i].cost.toFixed(2)}
                         td $#{docs[i].currentValue.toFixed(2)}
                         - if(docs[i].gainLoss < 0){
                             td.loss $#{docs[i].gainLoss.toFixed(2)}
@@ -357,8 +357,8 @@ block content
                             td $#{docs[i].gainLoss.toFixed(2)}
                         - }
                         td 
-                            span.editRow.glyphicon.glyphicon-pencil(id=docs[i]._id)
-                            span.removeRow.glyphicon.glyphicon-remove(id=docs[i]._id)
+                            span.editRow.glyphicon.glyphicon-pencil
+                            span.removeRow.glyphicon.glyphicon-remove.hidden
                 - }
                 
         div(id="newTxDialog" title="New Transaction")
@@ -391,11 +391,11 @@ block content
             div(id="formError" style="display: none;")
                 
             form(action="/edit" method="post")
-                input(id="idEdit").textInput
+                input(id="editid" name="id").textInput.hidden
                 label Time and Date:
-                input(id="timeEdit" name="time" type="text").textInput
+                input(id="edittime" name="time" type="text").textInput
                 label Currency:
-                select(id="currencyEdit" name="currency").form-control
+                select(id="editcurrency" name="currency").form-control
                     option(selected="selected") BTC
                     option ETH
                     option LTC
@@ -405,14 +405,14 @@ block content
                     option LINK
                     option XTZ
                 label Type:
-                select(id="typeEdit" name="type").form-control
+                select(id="edittype" name="type").form-control
                     option(selected="selected") buy
                     option sell
                 label Amount:
-                input(id="amountEdit" name="amount" type="text").textInput
-                label(id="costProceedsEdit") Cost:
-                input(id="costEdit" name="cost" type="text").textInput
-                input(id="submitEdit" class="submit" type="submit" value="Save")
+                input(id="editamount" name="amount" type="text").textInput
+                label(id="editCostProceeds") Cost:
+                input(id="editcost" name="cost" type="text").textInput
+                input(id="editsubmit" class="submit" type="submit" value="Save")
 
         input(class="newTxButton" type="button" value="New Transaction")
 
@@ -428,15 +428,14 @@ block content
                 });
 
                 $('.editRow').on('click', function(){
-                    var id = $(this).id;
-                    var record = !{JSON.stringify(docs.find(element => element[_id] == id))}; 
-                    console.log(record._id);
-                    $('#idEdit').val(record._id);
-                    $('#timeEdit').val(record.time);
-                    $('#currencyEdit').val(record.currency);
-                    $('#typeEdit').val(record.type);
-                    $('#amountEdit').val(record.amount);
-                    $('#costEdit').val(record.cost);
+
+                    $("#editid").val($(".rowEditId", $(this).closest("tr")).html());
+                    $("#edittime").val($(".rowEditTime", $(this).closest("tr")).html());
+                    $("#editcurrency").val($(".rowEditCurrency", $(this).closest("tr")).html());
+                    $("#edittype").val($(".rowEditType", $(this).closest("tr")).html());
+                    $("#editamount").val($(".rowEditAmount", $(this).closest("tr")).html());
+                    $("#editcost").val($(".rowEditCost", $(this).closest("tr")).html());
+
                     $('#editTxDialog').dialog('open');
                 });
 
@@ -445,29 +444,29 @@ block content
                     return;
                 });
 
-                $('#time').keyup(function(){
-                    var timeVal = $('#time').val(); 
+                $('#time, #edittime').keyup(function(){
+                    var timeVal = $(this).val(); 
                         if(timeVal.match(/^[0-9]{4}$/)){
-                            $('#time').val(timeVal + '-');
+                            $(this).val(timeVal + '-');
                         }else if(timeVal.match(/^[0-9]{4}-[0-1][0-9]$/)){
-                            $('#time').val(timeVal + '-');
+                            $(this).val(timeVal + '-');
                         }else if(timeVal.match(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/)){
-                            $('#time').val(timeVal + ' ');
+                            $(this).val(timeVal + ' ');
                         }else if(timeVal.match(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]$/)){
-                            $('#time').val(timeVal + ':');
+                            $(this).val(timeVal + ':');
                         }else if(timeVal.match(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]$/)){
-                            $('#time').val(timeVal + ':');
+                            $(this).val(timeVal + ':');
                         }else{
-                            $('#time').val(timeVal);
+                            $(this).val(timeVal);
                         }
                 });
 
-                $('#type').change(function(){
-                    var value = $('#type').val();
+                $('#type, #edittype').change(function(){
+                    var value = $(this).val();
                     if(value == 'buy'){
-                        $('#costProceeds').html('Cost:').change();
+                        $('#costProceeds, #editCostProceeds').html('Cost:').change();
                     }else if(value == 'sell'){  
-                        $('#costProceeds').html('Proceeds:').change();
+                        $('#costProceeds, #editCostProceeds').html('Proceeds:').change();
                     }
                 });
 
@@ -498,10 +497,26 @@ block content
                 });
             });
 
-            $('.submit').click(function(e){
+            $('#submit').click(function(e){
                 var time = $('#time').val();
                 var amount = $('#amount').val();
                 var cost = $('#cost').val();
+                var timeReg = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+                if(!time || !amount || !cost){
+                    e.preventDefault();
+                    $('#formError').html('<span>All fields are required.</span>');
+                    $('#formError').show('fast');
+                }
+                if(!(time).match(timeReg)){
+                    e.preventDefault();
+                    $('#formError').html('<span>Time must be in YYYY-MM-DD HH:MM:SS format.</span>');
+                    $('#formError').show('fast');
+                }
+            });
+            $('#editsubmit').click(function(e){
+                var time = $('#edittime').val();
+                var amount = $('#editamount').val();
+                var cost = $('#editcost').val();
                 var timeReg = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
                 if(!time || !amount || !cost){
                     e.preventDefault();

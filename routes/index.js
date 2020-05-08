@@ -177,7 +177,7 @@ router.get('/', function(req, res, next) {
 router.post('/add', function(req, res, next) {
     var time = req.body.time;
     var currency = req.body.currency.toUpperCase();
-    var type = req.body.type;
+    var type = req.body.type.toLowerCase();
     var amount = Number(req.body.amount);
     var cost = Number(req.body.cost);
 
@@ -196,7 +196,7 @@ router.post('/edit', function(req, res, next) {
     var id = req.body.id;
     var time = req.body.time;
     var currency = req.body.currency.toUpperCase();
-    var type = req.body.type;
+    var type = req.body.type.toLowerCase();
     var amount = Number(req.body.amount);
     var cost = Number(req.body.cost);
 
@@ -211,6 +211,15 @@ router.post('/edit', function(req, res, next) {
     }
 
     db.updateTransaction(id, time, currency, type, amount, cost, function(){
+        //res.redirect('/transactions');
+        res.redirect('/');
+    });
+});
+
+router.post('/delete', function(req, res, next) {
+    var id = req.body.id;
+
+    db.removeTransaction(id, function(){
         //res.redirect('/transactions');
         res.redirect('/');
     });
