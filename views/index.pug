@@ -358,7 +358,7 @@ block content
                         - }
                         td 
                             span.editRow.glyphicon.glyphicon-pencil
-                            span.removeRow.glyphicon.glyphicon-remove.hidden
+                            span.removeRow.glyphicon.glyphicon-remove
                 - }
                 
         div(id="newTxDialog" title="New Transaction")
@@ -396,7 +396,7 @@ block content
                 input(id="edittime" name="time" type="text").textInput
                 label Currency:
                 select(id="editcurrency" name="currency").form-control
-                    option(selected="selected") BTC
+                    option BTC
                     option ETH
                     option LTC
                     option BCH
@@ -413,6 +413,32 @@ block content
                 label(id="editCostProceeds") Cost:
                 input(id="editcost" name="cost" type="text").textInput
                 input(id="editsubmit" class="submit" type="submit" value="Save")
+        
+        div(id="removeTxDialog" title="Remove Transaction")
+                
+            form(action="/remove" method="post")
+                input(id="removeid" name="id").textInput.hidden
+                label Time and Date:
+                input(id="removetime" name="time" type="text").textInput.prop('disabled', true)
+                label Currency:
+                select(id="removecurrency" name="currency").form-control.prop('disabled', true)
+                    option BTC
+                    option ETH
+                    option LTC
+                    option BCH
+                    option ETC
+                    option XLM
+                    option LINK
+                    option XTZ
+                label Type:
+                select(id="removetype" name="type").form-control.prop('disabled', true)
+                    option buy
+                    option sell
+                label Amount:
+                input(id="removeamount" name="amount" type="text").textInput.prop('disabled', true)
+                label(id="removeCostProceeds") Cost:
+                input(id="removecost" name="cost" type="text").textInput.prop('disabled', true)
+                input(id="removesubmit" class="submit" type="submit" value="Remove")
 
         input(class="newTxButton" type="button" value="New Transaction")
 
@@ -427,6 +453,10 @@ block content
                     autoOpen: false
                 });
 
+                $('#removeTxDialog').dialog({
+                    autoOpen: false
+                });
+
                 $('.editRow').on('click', function(){
                     $('#formError, #editFormError').hide();
                     $("#editid").val($(".rowEditId", $(this).closest("tr")).html());
@@ -434,14 +464,20 @@ block content
                     $("#editcurrency").val($(".rowEditCurrency", $(this).closest("tr")).html());
                     $("#edittype").val($(".rowEditType", $(this).closest("tr")).html());
                     $("#editamount").val($(".rowEditAmount", $(this).closest("tr")).html());
-                    $("#editcost").val($(".rowEditCost", $(this).closest("tr")).html());
+                    $("#editcost").val($(".rowEditCost", $(this).closest("tr")).html().substring(1));
 
                     $('#editTxDialog').dialog('open');
                 });
 
                 $('.removeRow').on('click', function(){
-                    console.log(this.id);
-                    return;
+                    $("#removeid").val($(".rowEditId", $(this).closest("tr")).html());
+                    $("#removetime").val($(".rowEditTime", $(this).closest("tr")).html());
+                    $("#removecurrency").val($(".rowEditCurrency", $(this).closest("tr")).html());
+                    $("#removetype").val($(".rowEditType", $(this).closest("tr")).html());
+                    $("#removeamount").val($(".rowEditAmount", $(this).closest("tr")).html());
+                    $("#removecost").val($(".rowEditCost", $(this).closest("tr")).html().substring(1));
+
+                    $('#removeTxDialog').dialog('open');
                 });
 
                 $('#time, #edittime').keyup(function(){
@@ -498,10 +534,12 @@ block content
             });
 
             $('#submit').click(function(e){
+                $('#formError').hide('fast');
                 var time = $('#time').val();
                 var amount = $('#amount').val();
                 var cost = $('#cost').val();
                 var timeReg = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+                var costReg = /^-?[0-9]{0,}\.?[0-9]{1,}$/;
                 if(!time || !amount || !cost){
                     e.preventDefault();
                     $('#formError').html('<span>All fields are required.</span>');
@@ -512,12 +550,26 @@ block content
                     $('#formError').html('<span>Time must be in YYYY-MM-DD HH:MM:SS format.</span>');
                     $('#formError').show('fast');
                 }
+                if(!(cost).match(costReg)){
+                    e.preventDefault();
+                    $('#formError').html('<span>Cost/Proceeds can only contain digits, zero or one negative sign, and zero or one decimal.</span>');
+                    $('#formError').show('fast');
+                }
+                if(!(amount).match(costReg)){
+                    e.preventDefault();
+                    $('#formError').html('<span>Amount can only contain digits, zero or one negative sign, and zero or one decimal.</span>');
+                    $('#formError').show('fast');
+                }
             });
             $('#editsubmit').click(function(e){
+                $('#editFormError').hide('fast');
                 var time = $('#edittime').val();
                 var amount = $('#editamount').val();
                 var cost = $('#editcost').val();
                 var timeReg = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+                var costReg = /^-?[0-9]{0,}\.?[0-9]{1,}$/;
+                console.log("cost " + cost.match(costReg));
+                console.log("amount " + amount.match(costReg));
                 if(!time || !amount || !cost){
                     e.preventDefault();
                     $('#editFormError').html('<span>All fields are required.</span>');
@@ -526,6 +578,16 @@ block content
                 if(!(time).match(timeReg)){
                     e.preventDefault();
                     $('#editFormError').html('<span>Time must be in YYYY-MM-DD HH:MM:SS format.</span>');
+                    $('#editFormError').show('fast');
+                }
+                if(!(cost).match(costReg)){
+                    e.preventDefault();
+                    $('#editFormError').html('<span>Cost/Proceeds can only contain digits, zero or one negative sign, and zero or one decimal.</span>');
+                    $('#editFormError').show('fast');
+                }
+                if(!(amount).match(costReg)){
+                    e.preventDefault();
+                    $('#editFormError').html('<span>Amount can only contain digits, zero or one negative sign, and zero or one decimal.</span>');
                     $('#editFormError').show('fast');
                 }
             });

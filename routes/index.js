@@ -216,7 +216,7 @@ router.post('/edit', function(req, res, next) {
     });
 });
 
-router.post('/delete', function(req, res, next) {
+router.post('/remove', function(req, res, next) {
     var id = req.body.id;
 
     db.removeTransaction(id, function(){
