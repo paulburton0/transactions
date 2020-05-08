@@ -388,7 +388,7 @@ block content
                 input(id="submit" class="submit" type="submit" value="Add")
         
         div(id="editTxDialog" title="Edit Transaction")
-            div(id="formError" style="display: none;")
+            div(id="editFormError" style="display: none;")
                 
             form(action="/edit" method="post")
                 input(id="editid" name="id").textInput.hidden
@@ -428,7 +428,7 @@ block content
                 });
 
                 $('.editRow').on('click', function(){
-
+                    $('#formError, #editFormError').hide();
                     $("#editid").val($(".rowEditId", $(this).closest("tr")).html());
                     $("#edittime").val($(".rowEditTime", $(this).closest("tr")).html());
                     $("#editcurrency").val($(".rowEditCurrency", $(this).closest("tr")).html());
@@ -520,13 +520,13 @@ block content
                 var timeReg = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
                 if(!time || !amount || !cost){
                     e.preventDefault();
-                    $('#formError').html('<span>All fields are required.</span>');
-                    $('#formError').show('fast');
+                    $('#editFormError').html('<span>All fields are required.</span>');
+                    $('#editFormError').show('fast');
                 }
                 if(!(time).match(timeReg)){
                     e.preventDefault();
-                    $('#formError').html('<span>Time must be in YYYY-MM-DD HH:MM:SS format.</span>');
-                    $('#formError').show('fast');
+                    $('#editFormError').html('<span>Time must be in YYYY-MM-DD HH:MM:SS format.</span>');
+                    $('#editFormError').show('fast');
                 }
             });
         });
