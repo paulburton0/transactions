@@ -374,7 +374,7 @@ block content
         div(id="newTxDialog" title="New Transaction")
             div(id="formError" style="display: none;")
                 
-            form(action="/add" method="post")
+            form(action="add" method="post")
                 label Time and Date:
                 input(id="time" name="time" type="text").textInput
                 label Currency:
@@ -400,7 +400,7 @@ block content
         div(id="editTxDialog" title="Edit Transaction")
             div(id="editFormError" style="display: none;")
                 
-            form(action="/edit" method="post")
+            form(action="edit" method="post")
                 input(id="editid" name="id").textInput.hidden
                 label Time and Date:
                 input(id="edittime" name="time" type="text").textInput
@@ -426,7 +426,7 @@ block content
         
         div(id="removeTxDialog" title="Remove Transaction")
                 
-            form(action="/remove" method="post")
+            form(action="remove" method="post")
                 input(id="removeid" name="id").textInput.hidden
                 label Time and Date:
                 input(id="removetime" name="time" type="text").textInput.prop('disabled', true)
