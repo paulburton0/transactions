@@ -119,7 +119,7 @@ block content
                 tr
                     td BTC
                     td #{totalBTCAmt.toFixed(8)}
-                    td #{totalBTCCost.toFixed(2)}
+                    td $#{totalBTCCost.toFixed(2)}
                     td $#{totalBTCValue.toFixed(2)}
                     - if(totalBTCGainLoss < 0){
                         td.loss $#{totalBTCGainLoss.toFixed(2)}
@@ -141,7 +141,7 @@ block content
                 tr
                     td ETH
                     td #{totalETHAmt.toFixed(8)}
-                    td #{totalETHCost.toFixed(2)}
+                    td $#{totalETHCost.toFixed(2)}
                     td $#{totalETHValue.toFixed(2)}
                     - if(totalETHGainLoss < 0){
                         td.loss $#{totalETHGainLoss.toFixed(2)}
@@ -163,7 +163,7 @@ block content
                 tr
                     td LTC
                     td #{totalLTCAmt.toFixed(8)}
-                    td #{totalLTCCost.toFixed(2)}
+                    td $#{totalLTCCost.toFixed(2)}
                     td $#{totalLTCValue.toFixed(2)}
                     - if(totalLTCGainLoss < 0){
                         td.loss $#{totalLTCGainLoss.toFixed(2)}
@@ -185,8 +185,8 @@ block content
                 tr
                     td BCH
                     td #{totalBCHAmt.toFixed(8)}
+                    td $#{totalBCHCost.toFixed(2)}
                     td $#{totalBCHValue.toFixed(2)}
-                    td #{totalBCHCost.toFixed(2)}
                     - if(totalBCHGainLoss < 0){
                         td.loss $#{totalBCHGainLoss.toFixed(2)}
                     - }else if(totalBCHGainLoss > 0){
@@ -207,7 +207,7 @@ block content
                 tr
                     td ETC
                     td #{totalETCAmt.toFixed(8)}
-                    td #{totalETCCost.toFixed(2)}
+                    td $#{totalETCCost.toFixed(2)}
                     td $#{totalETCValue.toFixed(2)}
                     - if(totalETCGainLoss < 0){
                         td.loss $#{totalETCGainLoss.toFixed(2)}
@@ -229,7 +229,7 @@ block content
                 tr
                     td XLM
                     td #{totalXLMAmt.toFixed(8)}
-                    td #{totalXLMCost.toFixed(2)}
+                    td $#{totalXLMCost.toFixed(2)}
                     td $#{totalXLMValue.toFixed(2)}
                     - if(totalXLMGainLoss < 0){
                         td.loss $#{totalXLMGainLoss.toFixed(2)}
@@ -251,7 +251,7 @@ block content
                 tr
                     td LINK
                     td #{totalLINKAmt.toFixed(8)}
-                    td #{totalLINKCost.toFixed(2)}
+                    td $#{totalLINKCost.toFixed(2)}
                     td $#{totalLINKValue.toFixed(2)}
                     - if(totalLINKGainLoss < 0){
                         td.loss $#{totalLINKGainLoss.toFixed(2)}
@@ -273,7 +273,7 @@ block content
                 tr
                     td XTZ
                     td #{totalXTZAmt.toFixed(8)}
-                    td #{totalXTZCost.toFixed(2)}
+                    td $#{totalXTZCost.toFixed(2)}
                     td $#{totalXTZValue.toFixed(2)}
                     - if(totalXTZGainLoss < 0){
                         td.loss $#{totalXTZGainLoss.toFixed(2)}
@@ -294,7 +294,7 @@ block content
                 tr
                     td All 
                     td &nbsp;
-                    td #{totalCost.toFixed(2)}
+                    td $#{totalCost.toFixed(2)}
                     td $#{totalValue.toFixed(2)}
                     - if(totalGainLoss < 0){
                         td.loss $#{totalGainLoss.toFixed(2)}
